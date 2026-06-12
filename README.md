@@ -3,16 +3,6 @@
 ## [1.5.00] – 2026-06-15
 
 > **✨ Novedades destacadas**  
-> Flujo de registro guiado, planes flexibles, asistente virtual, vista previa del sitio y mensajes inteligentes.
-
----
-
-### 🧭 Estructura general
-
-- 🔹 **6 pasos guiados** – Creación de presencia digital simplificada.  
-- 💾 **Guardado automático** – Cierra y retoma más tarde sin perder avances.  
-- 📱 **Diseño adaptable** – Funciona en móviles, tablets y computadoras.  
-- 🎨 **Colores claros + tipografía legible** – Para todas las edades.  
 
 ---
 
@@ -22,6 +12,41 @@
 |------|--------|----------|----------------------|
 | 🌱 **Semilla** | 4 500 CUP | 2 meses | Ideal para empezar a vender en línea. |
 | 🏢 **Negocio** (recomendado) | 15 000 CUP | 1 año | Mensajes automáticos, integración con EnZona, sin marca KOOWEXA. |
+| 💰 **Interés** | 10% del valor anual | – | Catálogo sin límites + asesoría prioritaria. |
+
+---
+
+### 📋 Formularios simples pero completos
+
+- **Datos personales** – nombre, carnet, móvil, correo Gmail, dirección.  
+- **Datos del negocio** – nombre, moneda, horarios, productos, redes sociales.  
+- **Validación amigable** – avisa si falta algo o está mal escrito.  
+- 📍 **Ubicación automática** – botón “Usar mi ubicación” para llenar dirección con coordenadas reales (con permiso).  
+
+---
+
+### 💳 Pago y envío de solicitud
+
+- **Dos opciones**: transferencia bancaria o efectivo.  
+- 📄 Resumen claro de lo elegido.  
+- ✅ Aceptas términos legales y envías la solicitud por SMS (simulado).  
+
+---
+
+### 🤖 Asistente virtual flotante
+
+- Botón movible por la pantalla.  
+- Resuelve preguntas frecuentes: precios, plazos, formas de pago, beneficios.  
+- 💬 Chat sencillo con respuestas inmediatas.  
+
+---
+
+### 📞 Soporte y contacto
+
+- 📱 **Asesor personal** disponible por WhatsApp.  
+- ✈️ Enlace directo al canal oficial de Telegram: [@Koowexa_App_Oficial](https://t.me/Koowexa_App_Oficial) en el pie de página.  
+
+---| 🏢 **Negocio** (recomendado) | 15 000 CUP | 1 año | Mensajes automáticos, integración con EnZona, sin marca KOOWEXA. |
 | 💰 **Interés** | 10% del valor anual | – | Catálogo sin límites + asesoría prioritaria. |
 
 > 💡 *Si olvidas elegir plan, la plataforma te sugiere el plan **Negocio** (el más completo).*

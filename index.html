@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#0D1B2A">
+    <title>KOOWEXA | K-LOGIN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #F1F4F8;
+            color: #1A2C3E;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0D1B2A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0s 0.3s;
+        }
+        .loader.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.2s ease;
+        }
+        .loader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(224,225,221,0.25);
+            border-top: 3px solid #E0E1DD;
+            border-radius: 0px;
+            animation: spin 0.7s linear infinite;
+        }
+        .loader-logo {
+            width: 64px;
+            height: 64px;
+        }
+
+        .app-header {
+            background: #0D1B2A;
+            padding: 28px 24px;
+            margin-bottom: 28px;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        .logo-circle {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+        }
+        .app-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #E0E1DD;
+        }
+        .header-subtitle {
+            color: #B0B8C5;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .step-badge {
+            background: #415A77;
+            color: white;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #DDE1E6;
+            min-width: 100px;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #415A77;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: #FFFFFF;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #E9EDF2;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0D1B2A;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+        .subtitle {
+            color: #5A6E7E;
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 24px 0;
+        }
+        .feature-item {
+            background: #F2F4F8;
+            padding: 12px 16px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-left: 3px solid #415A77;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.15s linear;
+            background: transparent;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #0D1B2A;
+            color: white;
+            border: 1px solid #0D1B2A;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #1B2B3E;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #415A77;
+            color: white;
+            border: 1px solid #415A77;
+        }
+        .btn-success {
+            background: #2C6E49;
+            color: white;
+            border: 1px solid #2C6E49;
+        }
+        .btn-outline {
+            background: white;
+            border: 1px solid #415A77;
+            color: #415A77;
+        }
+        .btn-outline:hover:not(:disabled) {
+            background: #F0F4F9;
+        }
+        .btn-lg {
+            padding: 14px 32px;
+            font-size: 1rem;
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
+        .btn-block {
+            width: 100%;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .actions {
+            margin-top: 28px;
+        }
+        .nav-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #EAEDF2;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-row {
+            margin-bottom: 0;
+        }
+        .form-row.two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #1F2F3E;
+        }
+        .required {
+            color: #C13C3C;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #CCD4DC;
+            background: white;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: 0.1s linear;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #415A77;
+            box-shadow: 0 0 0 2px rgba(65,90,119,0.2);
+        }
+        input.invalid, textarea.invalid, select.invalid {
+            border-color: #C13C3C;
+            background: #FEF6F6;
+        }
+        .error {
+            color: #C13C3C;
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: block;
+        }
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 8px 0;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border: 1px solid #CCD4DC;
+            background: white;
+            font-size: 0.85rem;
+        }
+        .radio-label input {
+            width: auto;
+            margin: 0;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+        .terms {
+            background: #F8FAFD;
+            padding: 16px;
+            border-left: 3px solid #415A77;
+            margin: 20px 0;
+        }
+
+        /* Planes orientados a resultados */
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin: 28px 0;
+        }
+        .plan {
+            border: 1px solid #DCE2E8;
+            background: white;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.1s ease;
+        }
+        .plan.selected {
+            border: 2px solid #2C6E49;
+            background: #F9FDFB;
+        }
+        .plan.recommended {
+            border-top: 4px solid #415A77;
+        }
+        .rec-badge {
+            background: #415A77;
+            color: white;
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+        .plan-header {
+            margin-bottom: 20px;
+        }
+        .plan h3 {
+            font-size: 1.4rem;
+            margin: 8px 0;
+            font-weight: 700;
+        }
+        .plan-price .price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0D1B2A;
+        }
+        .plan-features {
+            list-style: none;
+            margin: 20px 0;
+            flex-grow: 1;
+        }
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #EDF0F4;
+            font-size: 0.85rem;
+            display: flex;
+            gap: 8px;
+        }
+        .plan-features li .check {
+            color: #2C6E49;
+            font-weight: 700;
+        }
+
+        .payment-summary {
+            background: #F4F7FB;
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .summary-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #5C6F87;
+            text-transform: uppercase;
+        }
+        .summary-value {
+            font-weight: 700;
+            color: #0D1B2A;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .payment-option {
+            border: 1px solid #CCD4DC;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: white;
+        }
+        .payment-option input {
+            margin-right: 14px;
+            width: auto;
+        }
+        .payment-content {
+            flex: 1;
+        }
+        .payment-content h3 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+        .payment-content p {
+            font-size: 0.75rem;
+            color: #5F738C;
+        }
+        .payment-check {
+            font-weight: bold;
+            color: #2C6E49;
+            font-size: 1.1rem;
+        }
+
+        .preview {
+            margin: 20px 0;
+        }
+        .preview-url-bar {
+            background: #EFF2F7;
+            padding: 10px 16px;
+            display: flex;
+            gap: 12px;
+            font-family: monospace;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            border-left: 3px solid #415A77;
+        }
+        .preview-wrapper {
+            border: 1px solid #CCD4DC;
+            margin-bottom: 16px;
+        }
+        #preview-frame {
+            width: 100%;
+            height: 420px;
+            border: none;
+            display: block;
+        }
+
+        .success-card {
+            text-align: center;
+            padding: 48px 32px;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #2C6E49;
+            color: white;
+            font-size: 2.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .success-details {
+            margin: 28px auto;
+            max-width: 400px;
+            text-align: left;
+        }
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: #F4F7FB;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        /* Asistente mejorado */
+        .assistant-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: #0D1B2A;
+            border: 1px solid #415A77;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            z-index: 1000;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            user-select: none;
+            border-radius: 0px;
+            transition: 0.1s linear;
+        }
+        .assistant-btn:active { cursor: grabbing; }
+        .assistant-panel {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 360px;
+            max-width: calc(100vw - 40px);
+            background: white;
+            border: 1px solid #D0D9E2;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .assistant-panel.hidden { display: none; }
+        .assistant-header {
+            background: #0D1B2A;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+        }
+        .assistant-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .assistant-chat {
+            padding: 14px;
+            height: 280px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #F9FCFE;
+        }
+        .message {
+            padding: 8px 12px;
+            max-width: 85%;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            border-radius: 0px;
+        }
+        .bot-message {
+            background: #EDF2F7;
+            align-self: flex-start;
+            border-left: 2px solid #415A77;
+        }
+        .user-message {
+            background: #0D1B2A;
+            color: white;
+            align-self: flex-end;
+        }
+        .assistant-quick {
+            padding: 12px;
+            border-top: 1px solid #E2E8F0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: white;
+        }
+        .quick-btn {
+            background: #F1F4F9;
+            border: none;
+            padding: 8px 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+        }
+        .quick-btn:hover { background: #DCE3EC; }
+        .assistant-clear {
+            background: #EFF2F7;
+            border: none;
+            padding: 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .toasts {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 340px;
+        }
+        .toast {
+            background: white;
+            padding: 12px 16px;
+            border-left: 4px solid #415A77;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 0.85rem;
+            animation: fadeSlide 0.2s ease;
+        }
+        .toast.success { border-left-color: #2C6E49; }
+        .toast.info { border-left-color: #415A77; }
+        .toast.warning { border-left-color: #D97706; }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .modal.hidden { display: none; }
+        .modal-backdrop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(13,27,42,0.85);
+        }
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1100px;
+            height: 85%;
+            background: white;
+            z-index: 1;
+        }
+        .terms-content {
+            max-width: 680px;
+            height: auto;
+            max-height: 85%;
+            overflow-y: auto;
+            padding: 28px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #E0E4EA;
+            border: none;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #modal-frame { width: 100%; height: 100%; border: none; }
+
+        /* Modal de envío */
+        .send-modal {
+            max-width: 560px;
+            height: auto;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        .send-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        .preview-message {
+            background: #F4F7FB;
+            padding: 16px;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+            border-left: 3px solid #415A77;
+            margin: 16px 0;
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        .app-footer {
+            margin-top: 32px;
+        }
+        .footer-inner {
+            background: #0D1B2A;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            color: #BCC6D0;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+        .logo-circle-sm { width: 28px; height: 28px; }
+        .footer-links a { color: #E0E1DD; text-decoration: none; font-size: 0.8rem; }
+
+        .step { display: none; }
+        .step.active { display: block; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @media (max-width: 700px) {
+            .app { padding: 16px; }
+            .card { padding: 20px; }
+            .form-row.two-cols { grid-template-columns: 1fr; }
+            .plans { grid-template-columns: 1fr; }
+            .assistant-panel { width: 300px; right: 16px; }
+        }
+    </style>
+</head>
+<body>
+<div id="loader" class="loader"><div class="loader-content"><div class="loader-spinner"></div><svg class="loader-logo" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#E0E1DD"/><circle cx="50" cy="50" r="44" fill="#415A77"/><path d="M40 30 L40 70 M40 50 L65 30 M40 50 L65 70" stroke="#E0E1DD" stroke-width="8" stroke-linecap="round"/></svg><span class="logo-text">K-LOGIN</span></div></div>
+<div class="app">
+    <header class="app-header"><div class="header-inner"><svg class="logo-circle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#E0E1DD"/><circle cx="50" cy="50" r="44" fill="#415A77"/><path d="M40 30 L40 70 M40 50 L65 30 M40 50 L65 70" stroke="#E0E1DD" stroke-width="8"/></svg><h1>LOGIN</h1></div><p class="header-subtitle">Resultados reales para tu negocio, presencia digital que vende</p></header>
+    <main>
+        <section id="step-1" class="step active"><div class="card"><h2>REGISTRA TU NEGOCIO</h2><p class="subtitle">Completa la información y obtén tu web profesional.</p><div class="feature-list"><div class="feature-item">Aumenta tus ventas 24/7</div><div class="feature-item">Clientes te encuentran fácil</div><div class="feature-item">Automatización y ahorro de tiempo</div></div><div class="actions"><button id="start-btn" class="btn btn-primary btn-lg btn-block">Comenzar ahora</button></div></div></section>
+
+        <section id="step-2" class="step"><div class="step-indicator"><span class="step-badge">Paso 2 de 6</span><div class="progress-bar"><div class="progress-fill" style="width: 33.33%"></div></div></div>
+        <div class="card"><h2>Elige tu Plan de Resultados</h2><p class="subtitle">Cada plan está diseñado para generar impacto real en tu negocio</p>
+        <div class="plans">
+            <article class="plan" data-plan="semilla"><div class="plan-header"><h3>🌱 Semilla</h3><div class="plan-price"><span class="price">$4,500</span><span class="currency"> CUP</span></div><span>2 meses</span></div>
+            <ul class="plan-features"><li><span class="check">✓</span> Capta leads automáticamente</li><li><span class="check">✓</span> Tu negocio visible en internet 24/7</li><li><span class="check">✓</span> Página profesional que genera confianza</li><li><span class="check">✓</span> Ideal para empezar a vender online</li></ul>
+            <button class="btn btn-secondary plan-btn">Seleccionar y crecer</button></article>
+            <article class="plan recommended" data-plan="negocio"><span class="rec-badge">MÁS VENTAS</span><div class="plan-header"><h3>🚀 Negocio</h3><div class="plan-price"><span class="price">$15,000</span><span class="currency"> CUP</span></div><span>1 año</span></div>
+            <ul class="plan-features"><li><span class="check">✓</span> Automatización SMS: convierte más clientes</li><li><span class="check">✓</span> Sin marca, imagen 100% tuya</li><li><span class="check">✓</span> Pasarela EnZona: vende directamente</li><li><span class="check">✓</span> Posicionamiento SEO local garantizado</li></ul>
+            <button class="btn btn-primary plan-btn">Quiero resultados</button></article>
+            <article class="plan" data-plan="interes"><div class="plan-header"><h3>📈 Interés</h3><div class="plan-price"><span class="price">10%</span><span class="currency"> del valor</span></div><span>pago anual</span></div>
+            <ul class="plan-features"><li><span class="check">✓</span> Catálogo ilimitado: vende sin límites</li><li><span class="check">✓</span> Asesoría prioritaria para escalar</li><li><span class="check">✓</span> Actualizaciones que multiplican tus ventas</li></ul>
+            <button class="btn btn-secondary plan-btn">Escalar negocio</button></article>
+        </div>
+        <div class="nav-btns"><button data-prev="1" class="btn btn-outline">← Inicio</button><button id="next-2" class="btn btn-primary" disabled>Siguiente →</button></div></div></section>
+
+        <section id="step-3" class="step"><div class="step-indicator"><span class="step-badge">Paso 3 de 6</span><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div></div>
+        <div class="card"><h2>Tus datos</h2><form id="client-form"><div class="form-group"><label>Nombre Completo <span class="required">*</span></label><input type="text" id="nombre" required><span class="error" id="nombre-error"></span></div>
+        <div class="form-row two-cols"><div><label>Carnet ID <span class="required">*</span></label><input type="text" id="carnet" maxlength="11"><span class="error" id="carnet-error"></span></div><div><label>Móvil <span class="required">*</span></label><input type="tel" id="movil"><span class="error" id="movil-error"></span></div></div>
+        <div class="form-group"><label>Correo Gmail <span class="required">*</span></label><input type="email" id="correo"><span class="error" id="correo-error"></span></div>
+        <div class="form-group"><label>Dirección <span class="required">*</span></label><textarea id="direccion" rows="2"></textarea><span class="error" id="direccion-error"></span></div></form>
+        <div class="nav-btns"><button data-prev="2" class="btn btn-outline">← Planes</button><button id="next-3" class="btn btn-primary" disabled>Siguiente →</button></div></div></section>
+
+        <section id="step-4" class="step"><div class="step-indicator"><span class="step-badge">Paso 4 de 6</span><div class="progress-bar"><div class="progress-fill" style="width: 66.66%"></div></div></div>
+        <div class="card"><h2>Datos de tu Negocio</h2><form id="business-form"><div class="form-row two-cols"><div><label>Nombre Negocio <span class="required">*</span></label><input id="negocio"><span class="error" id="negocio-error"></span></div><div><label>Moneda</label><select id="moneda"><option value="">Seleccione</option><option>CUP</option><option>USD</option><option>MLC</option></select><span class="error" id="moneda-error"></span></div></div>
+        <div class="form-group"><label>Descripción (lo que ofreces)</label><textarea id="descripcion" rows="2"></textarea></div>
+        <div class="form-group"><label>¿Tienes logotipo?</label><div class="radio-group"><label class="radio-label"><input type="radio" name="logotipo" value="si"> Sí</label><label class="radio-label"><input type="radio" name="logotipo" value="no"> No</label></div></div>
+        <div class="input-group"><input type="text" id="ubicacion" placeholder="Dirección física o referencia"><button type="button" id="geo-btn" class="btn btn-secondary">Usar mi ubicación</button></div><span class="error" id="ubicacion-error"></span>
+        <div class="form-row two-cols"><div><label>Horarios de atención</label><textarea id="horarios" rows="2" placeholder="Ej: L-V 9am-5pm"></textarea></div><div><label>Productos o servicios clave</label><textarea id="productos" rows="2" placeholder="Ej: Repostería, Asesoría legal..."></textarea></div></div>
+        <div class="form-group"><label>Redes Sociales (Instagram, Facebook, etc)</label><textarea id="redes" rows="1" placeholder="@tumarca"></textarea></div></form>
+        <div class="nav-btns"><button data-prev="3" class="btn btn-outline">← Cliente</button><button id="next-4" class="btn btn-primary" disabled>Siguiente →</button></div></div></section>
+
+        <section id="step-5" class="step"><div class="step-indicator"><span class="step-badge">Paso 5 de 6</span><div class="progress-bar"><div class="progress-fill" style="width: 83.33%"></div></div></div>
+        <div class="card"><h2>Método de Pago y confirmación</h2><div class="payment-summary"><div class="summary-item"><span class="summary-label">Plan elegido</span><span id="summary-plan" class="summary-value">-</span></div><div class="summary-item"><span class="summary-label">Cliente</span><span id="summary-client" class="summary-value">-</span></div><div class="summary-item"><span class="summary-label">Negocio</span><span id="summary-business" class="summary-value">-</span></div></div>
+        <div class="payment-options"><label class="payment-option"><input type="radio" name="pago" value="Transferencia Bancaria"><div class="payment-content"><h3>Transferencia Bancaria</h3><p>Envías comprobante por SMS y activamos tu web</p></div><span class="payment-check">✓</span></label>
+        <label class="payment-option"><input type="radio" name="pago" value="Efectivo"><div class="payment-content"><h3>Efectivo</h3><p>Coordinamos punto de encuentro seguro</p></div><span class="payment-check">✓</span></label></div>
+        <div class="terms"><label class="checkbox-label"><input type="checkbox" id="terminos"> Acepto los <a href="#" id="terms-link">términos</a><span class="required">*</span></label><span class="error" id="terminos-error"></span></div>
+        <div class="nav-btns"><button data-prev="4" class="btn btn-outline">← Negocio</button><button id="preview-btn" class="btn btn-outline">Ver cómo quedará</button><button id="send-btn" class="btn btn-primary" disabled>Confirmar y enviar</button></div></div></section>
+
+        <section id="step-6" class="step"><div class="step-indicator"><span class="step-badge">Paso 6 de 6</span><div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div></div>
+        <div class="card"><h2>Previsualización de tu sitio</h2><div class="preview"><div class="preview-url-bar"><span class="preview-url" id="preview-url">tu-negocio.koowexa.com</span></div><div class="preview-wrapper"><iframe id="preview-frame" title="Vista previa"></iframe></div><button id="fullscreen-btn" class="btn btn-outline btn-sm">Ver en grande</button></div>
+        <div class="nav-btns"><button data-prev="5" class="btn btn-outline">← Pago</button><button id="confirm-final-btn" class="btn btn-success btn-lg">Confirmar y enviar ahora</button></div></div></section>
+
+        <section id="step-success" class="step"><div class="card success-card"><div class="success-icon">✓</div><h2>¡Registro exitoso!</h2><p class="subtitle">Hemos recibido tu solicitud. En breve recibirás un SMS con los pasos para activar tu web.</p><div class="success-details"><div class="detail-item">📈 Tu sitio estará listo en 24-48h</div><div class="detail-item">📱 Recibirás asistencia personalizada</div><div class="detail-item">🎯 Empieza a vender más desde ya</div></div><button id="new-register-btn" class="btn btn-primary btn-lg">Nuevo Registro</button></div></section>
+    </main>
+    <footer class="app-footer"><div class="footer-inner"><div class="footer-brand"><svg class="logo-circle-sm" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#E0E1DD"/><circle cx="50" cy="50" r="44" fill="#415A77"/><path d="M40 30 L40 70 M40 50 L65 30 M40 50 L65 70" stroke="#E0E1DD" stroke-width="8"/></svg>™️KOOWEXA | K-LOGIN © 2025-2026</div><div class="footer-links"><a href="https://t.me/Koowexa_App_Oficial" target="_blank">📢 En Telegram</a></div></div></footer>
+</div>
+<div id="toasts" class="toasts"></div>
+<div id="modal" class="modal hidden"><div class="modal-backdrop"></div><div class="modal-content"><button class="modal-close">✕</button><iframe id="modal-frame" title="Vista completa"></iframe></div></div>
+<div id="terms-modal" class="modal hidden"><div class="modal-backdrop"></div><div class="modal-content terms-content"><button class="modal-close">✕</button><h2>Términos y Condiciones</h2><div class="terms-body"><h3>1. Aceptación</h3><p>Al contratar los servicios de la marca: KOOWEXA. Aceptas todos los términos y politicas escritas de nuestro sitio oficial.</p><h3>2. Servicio</h3><p>Creación web según plan contratado, con resultados medibles.</p><h3>3. Pagos</h3><p>El servicio se activa tras confirmar pago vía SMS.</p><h3>4. Resultados</h3><p>Nos enfocamos en generar visibilidad y credibilidad a tu negocio.</p><h3>5. Contacto</h3><p>Asesor personal: <a href="https://wa.me/message/OLKGDA2I6R6WN1" target="_blank">Marcos</a></p></div></div></div>
+
+<!-- Modal de envío (WhatsApp / SMS) -->
+<div id="sendModal" class="modal hidden"><div class="modal-backdrop"></div><div class="modal-content send-modal"><button class="modal-close send-close">✕</button><h3>📨 Enviar solicitud</h3><p>Revisa el mensaje y elige cómo enviarlo al número +53 55117403</p><div class="preview-message" id="messagePreview"></div><div class="send-actions"><button id="whatsappBtn" class="btn btn-success"><span>📱</span> Enviar por WhatsApp</button><button id="smsBtn" class="btn btn-primary"><span>✉️</span> Enviar por SMS</button><button id="copyMsgBtn" class="btn btn-outline"><span>📋</span> Copiar mensaje</button></div><p class="subtitle" style="font-size:0.75rem; text-align:center;">✅ Al enviar, automáticamente se guardará tu registro.</p></div></div>
+
+<div id="assistant-btn" class="assistant-btn">ℹ️</div>
+<div id="assistant-panel" class="assistant-panel hidden"><div class="assistant-header"><span>Asesor</span><button class="assistant-close">❌️</button></div><div class="assistant-body"><div class="assistant-chat"><div class="message bot-message">¡Hola! Soy tu asesor digital. ¿En qué puedo ayudarte a potenciar tu negocio? 🚀</div></div><div class="assistant-quick"><button class="quick-btn" data-q="planes">📊 Comparar planes</button><button class="quick-btn" data-q="resultados">🏆 Resultados reales</button><button class="quick-btn" data-q="pago">💵 Formas de pago</button><button class="quick-btn" data-q="tiempo">⏱ Tiempo de activación</button><button class="quick-btn" data-q="como_funciona">⚙️ Cómo funciona</button><button class="quick-btn" data-q="soporte">📞 Contacto</button><button class="quick-btn" data-q="precios">💰 Inversión</button><button class="quick-btn" data-q="testimonio">⭐ Beneficios clave</button></div><button id="assistant-clear" class="assistant-clear">Limpiar conversación</button></div></div>
+
+<script>
+(function(){
+    const State = { step:1, plan:null, data:{ client:{}, business:{}, payment:{} } };
+    const $ = (s,p=document)=>p.querySelector(s);
+    const $$ = (s,p=document)=>Array.from(p.querySelectorAll(s));
+    const Loader={ el:$('#loader'), show(){ this.el.classList.add('active'); }, hide(){ this.el.classList.remove('active'); } };
+    const Toast={ show(text,type='info',duration=5000){
+        const t=document.createElement('div'); t.className=`toast ${type}`; t.innerHTML=`<div>${text}</div><button class="toast-close" style="float:right; background:none; border:none; cursor:pointer;">✕</button>`;
+        $('#toasts').appendChild(t); t.querySelector('.toast-close').onclick=()=>t.remove();
+        setTimeout(()=>t.remove(),duration);
+    } };
+    
+    // NÚMERO DE DESTINO: +53 55117403
+    const TARGET_PHONE = "5355117403";
+    
+    // Construir mensaje completo con todos los datos
+    function buildFullMessage() {
+        const client = State.data.client || {};
+        const business = State.data.business || {};
+        const plan = State.plan || "No definido";
+        const paymentMethod = document.querySelector('input[name="pago"]:checked')?.value || "No seleccionado";
+        const termAccepted = $('#terminos')?.checked ? "Sí" : "No";
+        
+        let msg = "🔷️K-LOGIN🔷️\n\n";
+        msg += `🔹 *Plan contratado:* ${plan}\n`;
+        msg += `💰 *Forma de pago:* ${paymentMethod}\n`;
+        msg += `✅ *Acepta términos:* ${termAccepted}\n\n`;
+        msg += `👤 *CLIENTE*\n`;
+        msg += `Nombre: ${client.nombre || "-"}\n`;
+        msg += `Carnet: ${client.carnet || "-"}\n`;
+        msg += `Teléfono: ${client.movil || "-"}\n`;
+        msg += `Email: ${client.correo || "-"}\n`;
+        msg += `Dirección: ${client.direccion || "-"}\n\n`;
+        msg += `🏢 *NEGOCIO*\n`;
+        msg += `Nombre: ${business.negocio || "-"}\n`;
+        msg += `Moneda: ${business.moneda || "-"}\n`;
+        msg += `Descripción: ${business.descripcion || "-"}\n`;
+        msg += `Ubicación: ${business.ubicacion || "-"}\n`;
+        msg += `Horarios: ${business.horarios || "-"}\n`;
+        msg += `Productos: ${business.productos || "-"}\n`;
+        msg += `Redes: ${business.redes || "-"}\n`;
+        msg += `Logotipo propio: ${business.logotipo === "si" ? "Sí" : "No"}\n\n`;
+        msg += `📅 *Registro generado desde plataforma web KOOWEXA*`;
+        return msg;
+    }
+    
+    // Mostrar modal de envío con el mensaje
+    function showSendModal() {
+        const modal = $('#sendModal');
+        const previewDiv = $('#messagePreview');
+        const fullMsg = buildFullMessage();
+        previewDiv.innerText = fullMsg;
+        modal.classList.remove('hidden');
+        
+        // Eventos temporales
+        const closeModal = () => modal.classList.add('hidden');
+        $$('.send-close').forEach(btn => btn.onclick = closeModal);
+        modal.querySelector('.modal-backdrop').onclick = closeModal;
+        
+        // Enviar por WhatsApp
+        $('#whatsappBtn').onclick = () => {
+            const url = `https://wa.me/${TARGET_PHONE}?text=${encodeURIComponent(fullMsg)}`;
+            window.open(url, '_blank');
+            finalizeSubmission();
+            closeModal();
+        };
+        // Enviar por SMS (solo dispositivos móviles compatibles)
+        $('#smsBtn').onclick = () => {
+            const smsUrl = `sms:${TARGET_PHONE}?body=${encodeURIComponent(fullMsg)}`;
+            window.location.href = smsUrl;
+            finalizeSubmission();
+            closeModal();
+        };
+        // Copiar mensaje
+        $('#copyMsgBtn').onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(fullMsg);
+                Toast.show("✅ Mensaje copiado al portapapeles. Puedes enviarlo manualmente al +53 55117403 por WhatsApp o SMS.", "success");
+            } catch(e) {
+                Toast.show("No se pudo copiar, selecciona manualmente el texto", "warning");
+            }
+        };
+    }
+    
+    function finalizeSubmission() {
+        // Guardar datos y marcar como éxito
+        Storage.save();
+        Toast.show("📨 Solicitud enviada correctamente. Nuestro equipo te contactará pronto.", "success");
+        Navigation.goto(6);
+        // Actualizar resumen de éxito si se necesita
+        setTimeout(() => {
+            if($('#step-success')) $('#step-success').classList.add('active');
+        }, 100);
+    }
+    
+    // Handler principal para enviar (desde paso 5 o paso 6)
+    function handleSend() {
+        if(!Validation.payment()) return;
+        if(!State.plan) { Toast.show("Selecciona un plan primero", "warning"); return; }
+        if(!Validation.client() || !Validation.business()) {
+            Toast.show("Completa correctamente los datos del cliente y negocio antes de enviar", "warning");
+            return;
+        }
+        // Actualizar datos de pago en el state
+        State.data.payment = { method: document.querySelector('input[name="pago"]:checked')?.value };
+        Storage.save();
+        showSendModal();
+    }
+    
+    // Asistente y otras funciones (igual que antes pero manteniendo integridad)
+    const Assistant = {
+        panel: $('#assistant-panel'),
+        btn: $('#assistant-btn'),
+        chatContainer: $('.assistant-chat'),
+        responses: {
+            planes: "🔍 *Comparativa de resultados:*\n• Semilla: Captas leads y apareces en Google. Ideal para empezar a vender.\n• Negocio (recomendado): Automatización por SMS + pasarela EnZona. Convierte cada visita en venta.\n• Interés: Catálogo ilimitado, escalas sin preocupaciones. ¿Cuál se ajusta más a tu negocio?",
+            resultados: "🏆 *Resultados que obtienes:* Aumento de visibilidad local, más llamadas y mensajes de clientes, ventas automáticas las 24h, y credibilidad profesional. Negocios con web aumentan sus ingresos hasta un 40%.",
+            pago: "💵 Aceptamos transferencia bancaria o efectivo. Al enviar tu solicitud, te contactamos en menos de 1 hora para coordinar. ¡Seguro y rápido!",
+            tiempo: "⏱ Tu sitio web estará activo en 7-15 dias después de confirmar el pago. Mientras tanto, puedes ir preparando tus fotos y textos.",
+            como_funciona: "⚙️ 1. Elige plan. 2. Completa datos. 3. Envías solicitud. 4. Confirmas pago. 5. ¡Tu negocio online genera ventas! ¿Necesitas ayuda en algún paso?",
+            soporte: "📢 Nuestro canal oficial en Telegram: https://t.me/Koowexa_App_Oficial . Respondemos todas las dudas en menos de 30 minutos.",
+            precios: "💰 *Inversión que multiplica:* Semilla 4,500 CUP (2 meses). Negocio 15,000 CUP (1 año). Interés 10% del valor anual. ¿Listo para crecer?",
+            testimonio: "⭐ Beneficios clave: Clientela las 24h, automatización de mensajes, sin necesidad de redes sociales, presencia profesional. ¡Empieza hoy!"
+        },
+        toggle(){ this.panel.classList.toggle('hidden'); },
+        addMessage(text, isUser=false, delay=0){
+            setTimeout(()=>{
+                const div=document.createElement('div'); div.className=`message ${isUser?'user-message':'bot-message'}`; div.innerHTML=text.replace(/\n/g,'<br>');
+                this.chatContainer.appendChild(div); this.chatContainer.scrollTop=this.chatContainer.scrollHeight;
+            }, delay);
+        },
+        botReply(text){ this.addMessage(text, false, 300); },
+        smartResponse(questionKey){
+            let msg = this.responses[questionKey] || "Consulta en nuestro canal de Telegram @Koowexa_App_Oficial, te atenderemos rápido.";
+            if(questionKey === 'planes' && State.plan) msg += `\n\nActualmente has seleccionado el plan *${State.plan}*. ¿Quieres cambiar o confirmar?`;
+            if(questionKey === 'resultados' && State.plan === 'Negocio') msg = "🏆 Con el plan Negocio, automatizas SMS, integras EnZona y eliminas la marca. ¡Resultados medibles: más clientes te contactan directamente!";
+            this.botReply(msg);
+        },
+        clearChat(){ this.chatContainer.innerHTML = '<div class="message bot-message">¡Hola! Soy tu asesor digital. ¿En qué puedo ayudarte a potenciar tu negocio? 🚀</div>'; }
+    };
+    
+    // Spam de valor
+    const SmartSpam = {
+        messages: [
+            "📢 ¿Sabías? Con el plan Negocio, cada SMS automatizado puede convertir hasta 3 clientes por día.",
+            "🚀 Los negocios con web profesional generan un 60% más de confianza. ¡Empieza ya!",
+            "💰 Invierte 4,500 CUP y recupera tu inversión con solo 2 ventas. Resultados reales.",
+            "⭐ El 90% de los clientes busca el negocio en Google antes de comprar. Haz que te encuentren.",
+            "📱 Activa tu web hoy y recibe consultas mientras duermes. Automatización incluida.",
+            "🎯 Con KOOWEXA, tu negocio aparecera disponible a tiempo completo en internet. ¡Mayor impacto en el mercado!",
+            "🏆 Clientes del plan Negocio aumentaron sus ventas un 40% en 3 meses. ¿Te lo vas a perder?",
+            "⚡ Ofrecemos soporte en Telegram: @Koowexa_App_Oficial. Resolvemos dudas en minutos."
+        ],
+        interval: null,
+        start(){
+            if(this.interval) clearInterval(this.interval);
+            this.interval = setInterval(()=>{
+                if(State.step > 1 && State.step < 6){
+                    let msg = this.messages[Math.floor(Math.random() * this.messages.length)];
+                    if(State.plan === 'Negocio') msg = "🔥 El plan Negocio incluye pasarela EnZona, ¡vende directamente desde tu web sin comisiones extras! " + msg;
+                    else if(State.plan === 'Semilla') msg = "🌱 Con el plan Semilla, duplicas tu presencia digital por solo 4,500 CUP. " + msg;
+                    Toast.show(msg, 'info', 7000);
+                }
+            }, 35000);
+        }
+    };
+    
+    const Navigation={ goto(step){ if(step<1||step>6) return; Loader.show(); setTimeout(()=>{ $$('.step').forEach(s=>s.classList.remove('active')); $(`#step-${step}`).classList.add('active'); State.step=step; Loader.hide(); window.scrollTo({top:0,behavior:'smooth'}); if(step===6) Preview.generate(); if(step===2 && State.plan) $('#next-2').disabled=false; },200); } };
+    
+    const Validation={ patterns:{ gmail:/^[a-z0-9._%+-]+@gmail\.com$/i, carnet:/^\d{11}$/, movil:/^(\+?53)?\s?\d{8}$/ }, showError(id,msg){ const e=$( `#${id}-error`); if(e)e.textContent=msg; const inp=$( `#${id}`); if(inp)inp.classList.add('invalid'); }, clearError(id){ const e=$( `#${id}-error`); if(e)e.textContent=''; const inp=$( `#${id}`); if(inp)inp.classList.remove('invalid'); }, client(){ let valid=true; const data={}; const n=$('#nombre').value.trim(); if(n.length<3){ this.showError('nombre','Mínimo 3 caracteres'); valid=false; }else data.nombre=n; const ci=$('#carnet').value.trim(); if(!this.patterns.carnet.test(ci)){ this.showError('carnet','11 dígitos'); valid=false; }else data.carnet=ci; const dir=$('#direccion').value.trim(); if(dir.length<5){ this.showError('direccion','Completa dirección'); valid=false; }else data.direccion=dir; const em=$('#correo').value.trim(); if(!this.patterns.gmail.test(em)){ this.showError('correo','Debe ser @gmail.com'); valid=false; }else data.correo=em; const mob=$('#movil').value.trim(); if(!this.patterns.movil.test(mob.replace(/\s/g,''))){ this.showError('movil','Ej: +53 5XXXXXXXX'); valid=false; }else data.movil=mob; if(valid) State.data.client=data; return valid; }, business(){ let valid=true; const data={}; const neg=$('#negocio').value.trim(); if(!neg) this.showError('negocio','Obligatorio'); else data.negocio=neg; const ubi=$('#ubicacion').value.trim(); if(!ubi) this.showError('ubicacion','Requerido'); else data.ubicacion=ubi; const hor=$('#horarios').value.trim(); if(!hor) this.showError('horarios','Obligatorio'); else data.horarios=hor; const prod=$('#productos').value.trim(); if(prod.length<2) this.showError('productos','Al menos un producto'); else data.productos=prod; const mon=$('#moneda').value; if(!mon) this.showError('moneda','Seleccione'); else data.moneda=mon; const logo=document.querySelector('input[name="logotipo"]:checked'); data.logotipo=logo?logo.value:'no'; data.redes=$('#redes').value.trim(); if(valid) State.data.business=data; return valid; }, payment(){ let ok=true; if(!document.querySelector('input[name="pago"]:checked')){ Toast.show('Selecciona método de pago','warning'); ok=false; } if(!$('#terminos').checked){ this.showError('terminos','Acepta términos'); ok=false; }else this.clearError('terminos'); return ok; }, updateNext(step){ const btn=$( `#next-${step}`); if(btn) btn.disabled=!(step===3?this.client():step===4?this.business():false); }, updateSend(){ const metodo=document.querySelector('input[name="pago"]:checked'); const term=$('#terminos').checked; $('#send-btn').disabled=!(metodo&&term); } };
+    
+    const Preview={ generate(){ const b=State.data.business||{}, c=State.data.client||{}; const nom=b.negocio||'Mi Negocio'; const url=`${nom.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')||'negocio'}.koowexa.com`; $('.preview-url').innerText=url; const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;margin:0;background:#F4F7FC}.header{background:#0D1B2A;color:white;padding:2rem;text-align:center}.container{padding:1.5rem}.card{background:white;padding:1rem;margin:1rem 0;border-left:4px solid #415A77}</style></head><body><div class="header"><h1>${nom}</h1><p>${b.descripcion||'Tu negocio ahora online'}</p></div><div class="container"><div class="card"><strong>📍 Ubicación:</strong> ${b.ubicacion||''}<br><strong>⏰ Horarios:</strong> ${b.horarios||''}<br><strong>📞 Contacto:</strong> ${c.movil||''}</div><div class="card"><strong>🛍 Productos/Servicios:</strong><br>${(b.productos||'').replace(/\n/g,'<br>')}</div></div></body></html>`; $('#preview-frame').srcdoc=html; $('#modal-frame').srcdoc=html; } };
+    
+    const Geolocation={ get(){ if('geolocation'in navigator){ Loader.show(); navigator.geolocation.getCurrentPosition(pos=>{ $('#ubicacion').value=`Lat: ${pos.coords.latitude.toFixed(5)}, Lng: ${pos.coords.longitude.toFixed(5)}`; Loader.hide(); Validation.updateNext(4); },()=>{ Loader.hide(); Toast.show('No se pudo obtener ubicación, intente manual','error'); }); }else Toast.show('Geolocalización no soportada','error'); } };
+    
+    const Storage={ save(){ localStorage.setItem('koowexa_data',JSON.stringify(State.data)); localStorage.setItem('koowexa_plan',State.plan); }, restore(){ try{ const d=localStorage.getItem('koowexa_data'); const p=localStorage.getItem('koowexa_plan'); if(d)State.data=JSON.parse(d); if(p)State.plan=p; const c=State.data.client||{}; if(c.nombre)$('#nombre').value=c.nombre; if(c.carnet)$('#carnet').value=c.carnet; if(c.direccion)$('#direccion').value=c.direccion; if(c.correo)$('#correo').value=c.correo; if(c.movil)$('#movil').value=c.movil; const b=State.data.business||{}; if(b.negocio)$('#negocio').value=b.negocio; if(b.descripcion)$('#descripcion').value=b.descripcion; if(b.ubicacion)$('#ubicacion').value=b.ubicacion; if(b.horarios)$('#horarios').value=b.horarios; if(b.productos)$('#productos').value=b.productos; if(b.moneda)$('#moneda').value=b.moneda; if(b.redes)$('#redes').value=b.redes; if(b.logotipo){ const r=document.querySelector(`input[name="logotipo"][value="${b.logotipo}"]`); if(r)r.checked=true; } Toast.show('Datos recuperados','success'); }catch(e){} } };
+    
+    function init(){
+        $('#start-btn').onclick=()=>Navigation.goto(2);
+        $$('[data-prev]').forEach(b=>b.onclick=()=>Navigation.goto(parseInt(b.dataset.prev)));
+        $('#next-2').onclick=()=>{ if(State.plan) Navigation.goto(3); else Toast.show('Selecciona un plan primero','warning'); };
+        $('#next-3').onclick=()=>{ if(Validation.client()){ Storage.save(); Navigation.goto(4); } };
+        $('#next-4').onclick=()=>{ if(Validation.business()){ Storage.save(); Navigation.goto(5); } };
+        $$('.plan-btn').forEach(btn=>{ btn.onclick=function(){ const planCard=this.closest('.plan'); const plan=planCard.dataset.plan; $$('.plan').forEach(c=>c.classList.remove('selected')); planCard.classList.add('selected'); State.plan=plan.charAt(0).toUpperCase()+plan.slice(1); $('#next-2').disabled=false; Storage.save(); Toast.show(`Plan ${State.plan} seleccionado. ¡Excelente decisión para tu negocio!`,'success'); }; });
+        $('#client-form').oninput=()=>{ Validation.updateNext(3); Storage.save(); };
+        $('#business-form').oninput=()=>{ Validation.updateNext(4); Storage.save(); };
+        document.querySelectorAll('input[name="pago"]').forEach(r=>r.onchange=Validation.updateSend);
+        $('#terminos').onchange=Validation.updateSend;
+        $('#send-btn').onclick=handleSend;
+        $('#confirm-final-btn').onclick=handleSend;
+        $('#preview-btn').onclick=()=>{ if(State.data.business.negocio) Navigation.goto(6); else Toast.show('Completa primero los datos del negocio','warning'); };
+        $('#geo-btn').onclick=Geolocation.get;
+        $('#terms-link').onclick=(e)=>{ e.preventDefault(); $('#terms-modal').classList.remove('hidden'); };
+        $$('.modal-close').forEach(b=>b.onclick=function(){ this.closest('.modal').classList.add('hidden'); });
+        $('#fullscreen-btn').onclick=()=>$('#modal').classList.remove('hidden');
+        $('#new-register-btn').onclick=()=>location.reload();
+        
+        Assistant.btn.onclick=()=>Assistant.toggle();
+        Assistant.initDrag=function(){ let drag=false,sX,sY,iX,iY; this.btn.addEventListener('mousedown',(e)=>{ drag=true; const rect=this.btn.getBoundingClientRect(); iX=rect.left; iY=rect.top; sX=e.clientX; sY=e.clientY; e.preventDefault(); }); document.addEventListener('mousemove',(e)=>{ if(!drag)return; let nx=iX+(e.clientX-sX), ny=iY+(e.clientY-sY); nx=Math.min(window.innerWidth-this.btn.offsetWidth,Math.max(0,nx)); ny=Math.min(window.innerHeight-this.btn.offsetHeight,Math.max(0,ny)); this.btn.style.left=nx+'px'; this.btn.style.top=ny+'px'; this.btn.style.right='auto'; this.btn.style.bottom='auto'; }); document.addEventListener('mouseup',()=>drag=false); };
+        Assistant.initDrag();
+        $('#assistant-clear').onclick=()=>Assistant.clearChat();
+        $$('.quick-btn').forEach(b=>{ b.onclick=()=>{ const q=b.dataset.q; Assistant.addMessage(b.innerText,true,0); Assistant.smartResponse(q); }; });
+        
+        Storage.restore();
+        if(localStorage.getItem('koowexa_plan')) $('#next-2').disabled=false;
+        setInterval(()=>{ if(State.step===2 && !State.plan) Toast.show('💡 El plan Negocio es el favorito: incluye automatización y más ventas. ¡Pruébalo!','info',5000); }, 55000);
+        SmartSpam.start();
+        Loader.hide();
+    }
+    document.addEventListener('DOMContentLoaded',init);
+})();
+</script>
+</body>
+</html>
